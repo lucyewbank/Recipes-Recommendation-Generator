@@ -92,6 +92,7 @@ if filtered_recipes.shape[0] != 0:
         if recipe_of_choice.shape[0] >5:
             cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
             recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
+            st.dataframe(recipes_in_cluster)
             recommendation_recipes = recipes_in_cluster.sample(n=3)
             recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         else:
