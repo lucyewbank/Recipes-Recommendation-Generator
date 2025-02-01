@@ -89,10 +89,16 @@ if filtered_recipes.shape[0] != 0:
     selecting_preferred_recipe = st.radio('Out of the recipes provided, which is your **favouite?**',['1','2','3'])
     
     if selecting_preferred_recipe== '1':
-        cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
-        recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
-        recommendation_recipes = recipes_in_cluster.sample(n=3)
-        recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+        if recipe_of_choice.shape[0] >5:
+            cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
+            recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
+            recommendation_recipes = recipes_in_cluster.sample(n=3)
+            recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+        else:
+            cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
+            recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
+            recommendation_recipes = recipes_in_cluster.sample(n=3)
+            recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         
     elif selecting_preferred_recipe== '2':
         try:
