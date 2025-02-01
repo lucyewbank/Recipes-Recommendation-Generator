@@ -101,10 +101,15 @@ if filtered_recipes.shape[0] != 0:
         
     elif selecting_preferred_recipe== '2':
         try:
-            cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
-            recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
-            recommendation_recipes = recipes_in_cluster.sample(n=3)
-            recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+            if filterest_recipes.shape[0]>5:
+                cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
+                recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
+                recommendation_recipes = recipes_in_cluster.sample(n=3)
+            else:
+                cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
+                recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
+                recommendation_recipes = recipes_in_cluster.sample(n=3)
+                recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         except Exception as e :
             st.error('Sorry you were only provided with one recipe, therefore you must select number one to get recommendations similar to this recipe or try again with different ingredients.')
             st.stop()
