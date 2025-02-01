@@ -86,7 +86,6 @@ if filtered_recipes.shape[0] != 0:
     st.header('Recipes matching your prefrences:')
     st.dataframe(recipe_of_choice)
     st.write('Follow this link and search the recipe you would like to try: https://www.food.com/recipe/ ')
-    st.write(f'size of dataframe {recipe_of_choice.shape}')
     selecting_preferred_recipe = st.radio('Out of the recipes provided, which is your **favouite?**',['1','2','3'])
     
     if selecting_preferred_recipe== '1':
