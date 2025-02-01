@@ -99,7 +99,7 @@ if filtered_recipes.shape[0] != 0:
             recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
             recommendation_recipes = recipes_in_cluster.sample(n=3)
             recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
-        except Exception as e:
+        except NameError:
             st.error('Sorry you were only provided with one recipe, therefore you must select number one to get recommendations similar to this recipe or try again with different ingredients.')
         
     elif selecting_preferred_recipe== '3':
@@ -108,7 +108,7 @@ if filtered_recipes.shape[0] != 0:
             recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
             recommendation_recipes = recipes_in_cluster.sample(n=3)            
             recommendation_recipes =recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
-        except Exception as e:
+        except NameError:
             st.error('Sorry, there was not a third option to select from. Please select again.')
         
         
