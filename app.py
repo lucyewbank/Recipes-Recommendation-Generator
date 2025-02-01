@@ -93,7 +93,6 @@ if filtered_recipes.shape[0] != 0:
             cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
             recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
             recommendation_recipes = recipes_in_cluster.sample(n=3)
-            recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         else:
             cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
             recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
