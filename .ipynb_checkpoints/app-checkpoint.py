@@ -101,7 +101,7 @@ if filtered_recipes.shape[0] != 0:
         
     elif selecting_preferred_recipe== '2':
         try:
-            if filterest_recipes.shape[0]>5:
+            if filtered_recipes.shape[0]>5:
                 cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
                 recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
                 recommendation_recipes = recipes_in_cluster.sample(n=3)
