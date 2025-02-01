@@ -125,6 +125,8 @@ if filtered_recipes.shape[0] == 0:
     st.write(' There are recipes in the dataset containing these items, just **not** in the combination you requested: ')
     st.write(f'{ingredient_matches[1:]}')
     st.write('**Please edit your selection and try again.**')
+    st.write()
+    st.write('These recipes are from the food.com website and the data was sourced at 
 
 
 
