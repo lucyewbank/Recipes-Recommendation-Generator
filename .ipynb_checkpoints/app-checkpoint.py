@@ -22,7 +22,7 @@ custom_html = """
 """
 st.components.v1.html(custom_html)
 st.title('Recipe Recommendation Generator')
-st.header('Find new recipes to try!')
+st.header('Find new recipes to try and reduce your food waste!')
 st.write('This generator will ask you to input an ingredient you would like a recipe for.')
 st.markdown('You can input up to **3 ingredients** if desired when prompted to do so.')
 
@@ -84,8 +84,9 @@ if filtered_recipes.shape[0] != 0:
     st.header('Recipes matching your prefrences:')
     st.dataframe(recipe_of_choice)
     st.write('Follow this link and search the recipe you would like to try: https://www.food.com/recipe/ ')
-
+    st.write(f'size of dataframe {recipe_of_choice.shape}')
     selecting_preferred_recipe = st.radio('Out of the recipes provided, which is your **favouite?**',['1','2','3'])
+    
     if selecting_preferred_recipe== '1':
         cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
         recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
@@ -93,16 +94,23 @@ if filtered_recipes.shape[0] != 0:
         recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         
     elif selecting_preferred_recipe== '2':
-        cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
-        recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
-        recommendation_recipes = recipes_in_cluster.sample(n=3)
-        recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+        if recipe_of_choice.shape[0] > 1:
+            cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
+            recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
+            recommendation_recipes = recipes_in_cluster.sample(n=3)
+            recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+        else
+            st.write('Sorry you were only provided with one recipe, therefore you must select number one to get recommendations similar to this recipe or try again with different ingredients.')
         
     elif selecting_preferred_recipe== '3':
-        cluster_selection = int(recipe_of_choice['Cluster'].iloc[2])
-        recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
-        recommendation_recipes = recipes_in_cluster.sample(n=3)            
-        recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+        if recipe_of_choice.shape[0] == 3:
+            cluster_selection = int(recipe_of_choice['Cluster'].iloc[2])
+            recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
+            recommendation_recipes = recipes_in_cluster.sample(n=3)            
+            recommendation_recipes =recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+        else:
+            st.write('Sorry, there was not a third option to select from. Please select again.')
+        
         
     recommendation_recipes = recommendation_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author', 'cluster':'Cluster'})
     
