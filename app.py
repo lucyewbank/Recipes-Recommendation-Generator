@@ -95,7 +95,6 @@ if filtered_recipes.shape[0] != 0:
         
     elif selecting_preferred_recipe== '2':
         try:
-            recipe_of_choice.shape[0] > 1:
             cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
             recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
             recommendation_recipes = recipes_in_cluster.sample(n=3)
@@ -105,7 +104,6 @@ if filtered_recipes.shape[0] != 0:
         
     elif selecting_preferred_recipe== '3':
         try:
-            ecipe_of_choice.shape[0] == 3:
             cluster_selection = int(recipe_of_choice['Cluster'].iloc[2])
             recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
             recommendation_recipes = recipes_in_cluster.sample(n=3)            
