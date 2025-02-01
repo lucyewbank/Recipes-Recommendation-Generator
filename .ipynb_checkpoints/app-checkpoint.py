@@ -3,6 +3,8 @@ import streamlit as st
 import numpy as np
 from rich.prompt import Prompt
 
+st.set_option('client.showErrorDetails', False)
+
 st.set_page_config(layout="wide") 
 custom_html = """
 <div class="banner">
@@ -99,8 +101,8 @@ if filtered_recipes.shape[0] != 0:
             recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
             recommendation_recipes = recipes_in_cluster.sample(n=3)
             recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
-        except NameError:
-            st.error('Sorry you were only provided with one recipe, therefore you must select number one to get recommendations similar to this recipe or try again with different ingredients.')
+        except Exception as e :
+            st.error('Sorry you were only provided with one recipe, therefore you must select number one to get recommendations similar to this recipe or try again with different ingredients.', icon="🚨")
         
     elif selecting_preferred_recipe== '3':
         try:
@@ -108,8 +110,8 @@ if filtered_recipes.shape[0] != 0:
             recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
             recommendation_recipes = recipes_in_cluster.sample(n=3)            
             recommendation_recipes =recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
-        except NameError:
-            st.error('Sorry, there was not a third option to select from. Please select again.')
+        except Exception as e:
+            st.error('Sorry, there was not a third option to select from. Please select again.'. icon="🚨")
         
         
     recommendation_recipes = recommendation_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author', 'cluster':'Cluster'})
