@@ -89,6 +89,7 @@ if filtered_recipes.shape[0] != 0:
     selecting_preferred_recipe = st.radio('Out of the recipes provided, which is your **favouite?**',['1','2','3'])
     
     if selecting_preferred_recipe== '1':
+        st.write(f'recipe_of_choice {recipe_of_choice.shape}')
         if recipe_of_choice.shape[0] >5:
             cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
             recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
