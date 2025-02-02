@@ -73,6 +73,8 @@ for matching_columns in ingredient_matches:
 # Apply the filter based on the final condition
 ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
 
+st.write(f'{recipe_df[condition].shape}')
+
 cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
 filtered_recipes = recipe_df[condition]
 filtered_recipes = filtered_recipes[cols_for_table].sort_values('rating',ascending=False)
