@@ -61,23 +61,17 @@ ingredient_matches = []
 # find columns that have ingredient in them and add them to list
 for each_ingredient in list_requested_conditions:
     matching_columns = [col for col in ingredient_columns if each_ingredient in col.lower()]
-    ingredient_matches.append(matching_columns)
-
-# Apply the filter based on the final condition
-ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
+    ingredient_matches.extend(matching_columns)
 
 st.write(f'{ingredient_matches}')
 
-
-#troubleshooting
 if ingredient_matches:
-    condition = pd.Series(True, index=recipe_df.index) # Start with a condition where all rows are True
+    # condition where all rows are true
+    condition = pd.Series(True, index=recipe_df.index)
 
-# for each ingredient check if within the columns it says are for chicken that it has a 1 in the row 
-    for matching_columns in ingredient_matches:
-        if matching_columns:
-            ingredient_condition = recipe_df[matching_columns].sum(axis=1) > 0
-            condition &= ingredient_condition 
+    # check if ingredient in present in each recipe
+    for ingredient in ingredient_matches:
+            condition &= recipe_df[ingredient] ==1
     
     cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
     if condition.sum() ==0:
