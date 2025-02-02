@@ -32,6 +32,8 @@ recipe_df = pd.read_csv('recipe_df_app 2.csv', index_col=0)
 
 list_requested_conditions = []
 
+st.dataframe(recipe_df)
+
 dietary_input = st.radio('Select your dietary preference:', ['None','Vegetarian','Vegan'])
 if dietary_input != None :
     list_requested_conditions.append(str(dietary_input.lower()))
