@@ -69,6 +69,8 @@ for matching_columns in ingredient_matches:
     if matching_columns:
         ingredient_condition = recipe_df[matching_columns].sum(axis=1) > 0
         condition &= ingredient_condition  # Only keep rows where the condition holds for all ingredients
+    else:
+        st.write('No matching columns')
 
 # Apply the filter based on the final condition
 ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
