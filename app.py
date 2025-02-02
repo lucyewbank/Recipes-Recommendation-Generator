@@ -80,6 +80,13 @@ filtered_recipes = filtered_recipes.rename(columns = {'name': 'Recipe Name','min
 
 recipe_of_choice = filtered_recipes.head(3)
 
+if filtered_recipes.shape[0] == 0:
+    st.write(' There are recipes in the dataset containing these items, just **not** in the combination you requested: ')
+    st.write(f'{ingredient_matches[1:]}')
+    st.write('**Please edit your selection and try again.**')
+    st.write()
+    st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
+
 if filtered_recipes.shape[0] != 0:
     st.write(f'We found **{filtered_recipes.shape[0]}** recipes containing these ingredients.')
     st.write(f'The recipe with the highest rating is **{recipe_of_choice['Recipe Name'].iloc[0]}**')
@@ -136,12 +143,6 @@ if filtered_recipes.shape[0] != 0:
     st.dataframe(recommendation_recipes)
     st.subheader('**Enjoy!** ')
 
-if filtered_recipes.shape[0] == 0:
-    st.write(' There are recipes in the dataset containing these items, just **not** in the combination you requested: ')
-    st.write(f'{ingredient_matches[1:]}')
-    st.write('**Please edit your selection and try again.**')
-    st.write()
-    st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
 
 
 
