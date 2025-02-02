@@ -3,8 +3,6 @@ import streamlit as st
 import numpy as np
 from rich.prompt import Prompt
 
-st.set_option('client.showErrorDetails', False)
-
 st.set_page_config(layout="wide") 
 custom_html = """
 <div class="banner">
@@ -24,7 +22,7 @@ custom_html = """
 """
 st.components.v1.html(custom_html)
 st.title('Recipe Recommendation Generator')
-st.header('Find new recipes to try and reduce your food waste!')
+st.header('Find the best recipes')
 st.write('This generator will ask you to input an ingredient you would like a recipe for.')
 st.markdown('You can input up to **3 ingredients** if desired when prompted to do so.')
 
@@ -71,7 +69,7 @@ for matching_columns in ingredient_matches:
         condition &= ingredient_condition  # Only keep rows where the condition holds for all ingredients
 
 # Apply the filter based on the final condition
-ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
+#ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
 
 cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
 filtered_recipes = recipe_df[condition]
@@ -80,71 +78,43 @@ filtered_recipes = filtered_recipes.rename(columns = {'name': 'Recipe Name','min
 
 recipe_of_choice = filtered_recipes.head(3)
 
-if filtered_recipes.shape[0] == 0:
-    st.write(' There are recipes in the dataset containing these items, just **not** in the combination you requested: ')
-    st.write(f'{ingredient_matches[1:]}')
-    st.write('**Please edit your selection and try again.**')
-    st.write()
-    st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
-    
-st.write(f'{filtered_recipes.shape[0]}')
-
 if filtered_recipes.shape[0] != 0:
     st.write(f'We found **{filtered_recipes.shape[0]}** recipes containing these ingredients.')
     st.write(f'The recipe with the highest rating is **{recipe_of_choice['Recipe Name'].iloc[0]}**')
-    st.header('Recipes matching your prefrences:')
+    st.header('Filtered Recipes')
     st.dataframe(recipe_of_choice)
     st.write('Follow this link and search the recipe you would like to try: https://www.food.com/recipe/ ')
+
     selecting_preferred_recipe = st.radio('Out of the recipes provided, which is your **favouite?**',['1','2','3'])
-    
     if selecting_preferred_recipe== '1':
-        if filtered_recipes.shape[0] >5:
-            cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
-            recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
-            recommendation_recipes = recipes_in_cluster.sample(n=3)
-        else:
-            cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
-            recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
-            recommendation_recipes = recipes_in_cluster.sample(n=3)
-            recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+        cluster_selection = int(recipe_of_choice['Cluster'].iloc[0])
+        recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
+        recommendation_recipes = recipes_in_cluster.sample(n=3)
+        recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         
     elif selecting_preferred_recipe== '2':
-        try:
-            if filtered_recipes.shape[0]>5:
-                cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
-                recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
-                recommendation_recipes = recipes_in_cluster.sample(n=3)
-            else:
-                cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
-                recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
-                recommendation_recipes = recipes_in_cluster.sample(n=3)
-                recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
-        except Exception as e :
-            st.error('Sorry you were only provided with one recipe, therefore you must select number one to get recommendations similar to this recipe or try again with different ingredients.')
-            st.stop()
+        cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
+        recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
+        recommendation_recipes = recipes_in_cluster.sample(n=3)
+        recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         
     elif selecting_preferred_recipe== '3':
-        try:
-            if filtered_recipes.shape[0]>5:
-                cluster_selection = int(recipe_of_choice['Cluster'].iloc[2])
-                recipes_in_cluster = filtered_recipes[filtered_recipes['Cluster']== cluster_selection]
-                recommendation_recipes = recipes_in_cluster.sample(n=3)     
-            else:
-                cluster_selection = int(recipe_of_choice['Cluster'].iloc[1])
-                recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
-                recommendation_recipes = recipes_in_cluster.sample(n=3)
-                recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
-        except Exception as e:
-            st.error('Sorry, there was not a third option to select from. Please select again.')
-            st.stop()
-          
+        cluster_selection = int(recipe_of_choice['Cluster'].iloc[2])
+        recipes_in_cluster = recipe_df[recipe_df['cluster']== cluster_selection]
+        recommendation_recipes = recipes_in_cluster.sample(n=3)            
+        recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
+        
     recommendation_recipes = recommendation_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author', 'cluster':'Cluster'})
     
-    st.header('Similar Recipes You Might Like:')
+    st.header('Similar Recommended Recipes')
     st.write('Here are 3 extra recipes that dont necessarily contain your requested ingredient but are similar to this one that you could try, say tomorrow! ')
     st.dataframe(recommendation_recipes)
     st.subheader('**Enjoy!** ')
 
+if filtered_recipes.shape[0] == 0:
+    st.write(' There are recipes in the dataset containing these items, just **not** in the combination you requested: ')
+    st.write(f'{ingredient_matches[1:]}')
+    st.write('**Please edit your selection and try again.**')
 
 
 

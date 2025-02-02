@@ -64,14 +64,14 @@ for each_ingredient in list_requested_conditions:
 # apply a filter where we start by saying all rows are true
 condition = pd.Series([True] * len(recipe_df))  # Start with a condition where all rows are True
 
-# Apply the filter based on the final condition
-ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
-
 # for each ingredient check if within the columns it says are for chicken that it has a 1 in the row 
 for matching_columns in ingredient_matches:
     if matching_columns:
         ingredient_condition = recipe_df[matching_columns].sum(axis=1) > 0
         condition &= ingredient_condition  # Only keep rows where the condition holds for all ingredients
+
+# Apply the filter based on the final condition
+ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
 
 cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
 filtered_recipes = recipe_df[condition]
