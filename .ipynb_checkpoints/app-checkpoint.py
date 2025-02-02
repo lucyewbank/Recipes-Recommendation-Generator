@@ -70,10 +70,10 @@ condition = pd.Series(True, index=recipe_df.index)  # Start with a condition whe
 for matching_columns in ingredient_matches:
     if matching_columns:
         ingredient_condition = recipe_df[matching_columns].sum(axis=1) > 0
-        condition &= ingredient_condition  # Only keep rows where the condition holds for all ingredients
-         
+        condition &= ingredient_condition 
+        
 # Apply the filter based on the final condition
-# ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
+ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
 
 cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
 if condition.sum() ==0:
