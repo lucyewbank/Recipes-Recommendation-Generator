@@ -28,7 +28,7 @@ st.header('Find new recipes to try and reduce your food waste!')
 st.write('This generator will ask you to input an ingredient you would like a recipe for.')
 st.markdown('You can input up to **3 ingredients** if desired when prompted to do so.')
 
-recipe_df = pd.read_csv('recipe_df_app.csv')
+recipe_df = pd.read_csv('recipe_df_app 2.csv')
 
 list_requested_conditions = []
 
@@ -65,17 +65,13 @@ for each_ingredient in list_requested_conditions:
 condition = pd.Series([True] * len(recipe_df))  # Start with a condition where all rows are True
 
 # for each ingredient check if within the columns it says are for chicken that it has a 1 in the row 
-for matching_columns in ingredient_matches:
-    if matching_columns:
+if matching_columns:
+    for matching_columns in ingredient_matches:
         ingredient_condition = recipe_df[matching_columns].sum(axis=1) > 0
         condition &= ingredient_condition  # Only keep rows where the condition holds for all ingredients
-
-st.write(f'{ingredient_matches}')
          
 # Apply the filter based on the final condition
-ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
-
-st.write(f'{recipe_df[condition].shape}')
+# ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
 
 cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
 filtered_recipes = recipe_df[condition]
@@ -91,8 +87,6 @@ if filtered_recipes.shape[0] == 0:
     st.write()
     st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
     
-st.write(f'{filtered_recipes.shape}')
-
 if filtered_recipes.shape[0] != 0:
     st.write(f'We found **{filtered_recipes.shape[0]}** recipes containing these ingredients.')
     st.write(f'The recipe with the highest rating is **{recipe_of_choice['Recipe Name'].iloc[0]}**')
