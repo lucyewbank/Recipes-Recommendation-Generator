@@ -79,7 +79,7 @@ cols_for_table = ['name','minutes','rating','n_reviews','ingredients','descripti
 if condition.sum() ==0:
     filtered_recipes = pd.DataFrame(columns=cols_for_table)
 else:
-    filtered_recipes = recipes_df[condition][cols_for_table].sort_values('rating',ascending=False)
+    filtered_recipes = recipe_df[condition][cols_for_table].sort_values('rating',ascending=False)
     filtered_recipes = filtered_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author','vegetarian':'Vegetarian','vegan':'Vegan','cluster':'Cluster'})
 
 recipe_of_choice = filtered_recipes.head(3)
