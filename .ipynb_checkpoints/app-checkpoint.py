@@ -23,25 +23,23 @@ custom_html = """
 </style>
 """
 st.components.v1.html(custom_html)
-
-# intro
 st.title('Recipe Recommendation Generator')
 st.header('Find new recipes to try and reduce your food waste!')
 st.write('This generator will ask you to input an ingredient you would like a recipe for.')
 st.markdown('You can input up to **3 ingredients** if desired when prompted to do so.')
 
-# read data
-recipe_df = pd.read_csv('recipe_df_app 2.csv', index_col=0)
+recipe_df = pd.read_csv('recipe_df_app.csv')
 
 list_requested_conditions = []
 
-# input dietary preferences and ingredients
 dietary_input = st.radio('Select your dietary preference:', ['None','Vegetarian','Vegan'])
 if dietary_input != None :
     list_requested_conditions.append(str(dietary_input.lower()))
+
 first_ingredient = st.text_input('1. Input the first ingredient: ')
 if first_ingredient != None:
     list_requested_conditions.append(first_ingredient.lower())
+
 prompt_second_ingredient = st.radio('Would you like to input a second ingredient?', ['No','Yes'])
 if prompt_second_ingredient == 'Yes':
     second_ingredient = st.text_input('2. Input the second ingredient: ')
@@ -58,37 +56,30 @@ st.write(f'You have inputed that you would like a recipe with the following: **{
 ingredient_columns = recipe_df.columns[9:] 
 ingredient_matches = []
 
-# find columns that have ingredient in them and add them to list
+# find columns that have ingredient in them and them to list
 for each_ingredient in list_requested_conditions:
     matching_columns = [col for col in ingredient_columns if each_ingredient in col.lower()]
-    ingredient_matches.extend(matching_columns)
+    ingredient_matches.append(matching_columns)
 
-st.write(f'{ingredient_matches}')
+# apply a filter where we start by saying all rows are true
+condition = pd.Series([True] * len(recipe_df))  # Start with a condition where all rows are True
 
-if ingredient_matches:
-    # condition where all rows are true
-    condition = pd.Series(True, index=recipe_df.index)
+# for each ingredient check if within the columns it says are for chicken that it has a 1 in the row 
+for matching_columns in ingredient_matches:
+    if matching_columns:
+        ingredient_condition = recipe_df[matching_columns].sum(axis=1) > 0
+        condition &= ingredient_condition  # Only keep rows where the condition holds for all ingredients
 
-    # check if ingredient in present in each recipe
-    for ingredient in ingredient_matches:
-            condition &= recipe_df[ingredient] ==1
-    
-    cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
-    if condition.sum() ==0:
-        filtered_recipes = pd.DataFrame(columns=cols_for_table)
-    else:
-        filtered_recipes = recipe_df[condition][cols_for_table].sort_values('rating',ascending=False)
-        filtered_recipes = filtered_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author','vegetarian':'Vegetarian','vegan':'Vegan','cluster':'Cluster'})
+# Apply the filter based on the final condition
+#ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
+
+cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
+filtered_recipes = recipe_df[condition]
+filtered_recipes = filtered_recipes[cols_for_table].sort_values('rating',ascending=False)
+filtered_recipes = filtered_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author','vegetarian':'Vegetarian','vegan':'Vegan','cluster':'Cluster'})
 
 recipe_of_choice = filtered_recipes.head(3)
 
-if filtered_recipes.shape[0] == 0:
-    st.write(' There are recipes in the dataset containing these items, just **not** in the combination you requested: ')
-    st.write(f'{ingredient_matches[1:]}')
-    st.write('**Please edit your selection and try again.**')
-    st.write()
-    st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
-    
 if filtered_recipes.shape[0] != 0:
     st.write(f'We found **{filtered_recipes.shape[0]}** recipes containing these ingredients.')
     st.write(f'The recipe with the highest rating is **{recipe_of_choice['Recipe Name'].iloc[0]}**')
@@ -120,7 +111,7 @@ if filtered_recipes.shape[0] != 0:
                 recommendation_recipes = recipes_in_cluster.sample(n=3)
                 recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         except Exception as e :
-            st.error('Sorry you were only provided with one recipe, therefore you must select number one to get recommendations similar to this recipe or try again with different ingredients.')
+            st.error('Sorry we could not find recipes to recommend you. Please alter your selection.')
             st.stop()
         
     elif selecting_preferred_recipe== '3':
@@ -135,7 +126,7 @@ if filtered_recipes.shape[0] != 0:
                 recommendation_recipes = recipes_in_cluster.sample(n=3)
                 recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         except Exception as e:
-            st.error('Sorry, there was not a third option to select from. Please select again.')
+            st.error('Sorry we could not find recipes to recommend you. Please alter your selection.')
             st.stop()
           
     recommendation_recipes = recommendation_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author', 'cluster':'Cluster'})
@@ -144,6 +135,14 @@ if filtered_recipes.shape[0] != 0:
     st.write('Here are 3 extra recipes that dont necessarily contain your requested ingredient but are similar to this one that you could try, say tomorrow! ')
     st.dataframe(recommendation_recipes)
     st.subheader('**Enjoy!** ')
+
+if filtered_recipes.shape[0] == 0:
+    st.write(' There are recipes in the dataset containing these items, just **not** in the combination you requested: ')
+    st.write(f'{ingredient_matches[1:]}')
+    st.write('**Please edit your selection and try again.**')
+    st.write()
+    st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
+
 
 
 

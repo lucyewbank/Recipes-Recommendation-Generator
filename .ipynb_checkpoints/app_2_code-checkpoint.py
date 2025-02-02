@@ -111,7 +111,7 @@ if filtered_recipes.shape[0] != 0:
                 recommendation_recipes = recipes_in_cluster.sample(n=3)
                 recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         except Exception as e :
-            st.error('Sorry we could not find recipes to recommend you. Please alter your selection.')
+            st.error('Sorry you were only provided with one recipe, therefore you must select number one to get recommendations similar to this recipe or try again with different ingredients.')
             st.stop()
         
     elif selecting_preferred_recipe== '3':
@@ -126,7 +126,7 @@ if filtered_recipes.shape[0] != 0:
                 recommendation_recipes = recipes_in_cluster.sample(n=3)
                 recommendation_recipes = recommendation_recipes[cols_for_table].sort_values('rating',ascending=False)
         except Exception as e:
-            st.error('Sorry we could not find recipes to recommend you. Please alter your selection.')
+            st.error('Sorry, there was not a third option to select from. Please select again.')
             st.stop()
           
     recommendation_recipes = recommendation_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author', 'cluster':'Cluster'})
@@ -142,12 +142,3 @@ if filtered_recipes.shape[0] == 0:
     st.write('**Please edit your selection and try again.**')
     st.write()
     st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
-
-
-
-
-
-
-
-
-
