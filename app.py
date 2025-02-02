@@ -66,7 +66,7 @@ for each_ingredient in list_requested_conditions:
 # Apply the filter based on the final condition
 ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
 
-st.write{f'{ingredient_matches}')
+st.writ({f'{ingredient_matches}')
 
 
 #troubleshooting
