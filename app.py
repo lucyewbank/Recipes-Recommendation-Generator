@@ -91,7 +91,7 @@ if filtered_recipes.shape[0] == 0:
     st.write()
     st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
     
-st.write(f'{filtered_recipes.shape[0]}')
+st.write(f'{filtered_recipes.shape}')
 
 if filtered_recipes.shape[0] != 0:
     st.write(f'We found **{filtered_recipes.shape[0]}** recipes containing these ingredients.')
