@@ -71,7 +71,7 @@ for matching_columns in ingredient_matches:
         condition &= ingredient_condition  # Only keep rows where the condition holds for all ingredients
 
 # Apply the filter based on the final condition
-#ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
+ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
 
 cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
 filtered_recipes = recipe_df[condition]
@@ -86,6 +86,7 @@ if filtered_recipes.shape[0] == 0:
     st.write('**Please edit your selection and try again.**')
     st.write()
     st.write('These recipes are from the food.com website and the data was sourced at https://www.kaggle.com/datasets/shuyangli94/food-com-recipes-and-user-interactions ') 
+    
 st.write(f'{filtered_recipes.shape[0]}')
 
 if filtered_recipes.shape[0] != 0:
