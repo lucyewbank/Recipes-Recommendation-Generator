@@ -64,11 +64,11 @@ for each_ingredient in list_requested_conditions:
     ingredient_matches.append(matching_columns)
 
 # apply a filter where we start by saying all rows are true
-condition = pd.Series([True] * len(recipe_df))  # Start with a condition where all rows are True
+condition = pd.Series([True], index=recipe_df.index)  # Start with a condition where all rows are True
 
 # for each ingredient check if within the columns it says are for chicken that it has a 1 in the row 
-if matching_columns:
-    for matching_columns in ingredient_matches:
+for matching_columns in ingredient_matches:
+    if matching_columns:
         ingredient_condition = recipe_df[matching_columns].sum(axis=1) > 0
         condition &= ingredient_condition  # Only keep rows where the condition holds for all ingredients
          
@@ -76,9 +76,11 @@ if matching_columns:
 # ingredient_matches = [item for sublist in ingredient_matches for item in sublist]
 
 cols_for_table = ['name','minutes','rating','n_reviews','ingredients','description','vegetarian','vegan','cluster']
-filtered_recipes = recipe_df[condition]
-filtered_recipes = filtered_recipes[cols_for_table].sort_values('rating',ascending=False)
-filtered_recipes = filtered_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author','vegetarian':'Vegetarian','vegan':'Vegan','cluster':'Cluster'})
+if condition.sum() ==0:
+    filtered_recipes = pd.DataFrame(columns=cols_for_table)
+else:
+    filtered_recipes = recipes_df[condition][cols_for_table].sort_values('rating',ascending=False)
+    filtered_recipes = filtered_recipes.rename(columns = {'name': 'Recipe Name','minutes': 'Cook Time (minutes)','rating': 'Rating','n_reviews': 'Number of Reviews','ingredients': 'Ingredient List','description': 'Recipe Description by Author','vegetarian':'Vegetarian','vegan':'Vegan','cluster':'Cluster'})
 
 recipe_of_choice = filtered_recipes.head(3)
 
