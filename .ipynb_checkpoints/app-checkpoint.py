@@ -64,7 +64,7 @@ for each_ingredient in list_requested_conditions:
     ingredient_matches.append(matching_columns)
 
 # apply a filter where we start by saying all rows are true
-condition = pd.Series([True], index=recipe_df.index)  # Start with a condition where all rows are True
+condition = pd.Series(True, index=recipe_df.index)  # Start with a condition where all rows are True
 
 # for each ingredient check if within the columns it says are for chicken that it has a 1 in the row 
 for matching_columns in ingredient_matches:
