@@ -28,7 +28,7 @@ st.header('Find new recipes to try and reduce your food waste!')
 st.write('This generator will ask you to input an ingredient you would like a recipe for.')
 st.markdown('You can input up to **3 ingredients** if desired when prompted to do so.')
 
-recipe_df = pd.read_csv('recipe_df_app 2.csv')
+recipe_df = pd.read_csv('recipe_df_app 2.csv', index_col=0)
 
 list_requested_conditions = []
 
