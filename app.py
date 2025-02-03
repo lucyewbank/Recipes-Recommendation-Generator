@@ -80,8 +80,12 @@ filtered_recipes = filtered_recipes.rename(columns = {'name': 'Recipe Name','min
 
 recipe_of_choice = filtered_recipes.head(3)
 
+if filtered_recipes.shape[0] ==1478:
+    st.write('Sorry, there are no recipes meeting your requirements. Please edit your selection.')
+
 if filtered_recipes.shape[0] != 0:
     st.write(f'We found **{filtered_recipes.shape[0]}** recipes containing these ingredients.')
+    
     st.write(f'The recipe with the highest rating is **{recipe_of_choice['Recipe Name'].iloc[0]}**')
     st.header('Recipes matching your prefrences:')
     st.dataframe(recipe_of_choice)
