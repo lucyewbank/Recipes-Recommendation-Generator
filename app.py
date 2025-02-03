@@ -86,7 +86,7 @@ if filtered_recipes.shape[0] ==1478:
     st.stop()
 
 if filtered_recipes.shape[0] != 0:
-    st.write(f'We found **{filtered_recipes.shape[0]}** recipes containing these ingredients.')
+    st.write(f'We found **{filtered_recipes.shape[0]}** recipes containing all or some of these ingredients.')
     
     st.write(f'The recipe with the highest rating is **{recipe_of_choice['Recipe Name'].iloc[0]}**')
     st.header('Recipes matching your prefrences:')
